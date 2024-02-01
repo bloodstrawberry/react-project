@@ -8,7 +8,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Textarea from "@mui/joy/Textarea";
 
-import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
+import ReactDiffViewer, { DiffMethod } from "react-diff-viewer-continued";
 
 const MyDiffViewer = () => {
   const [oldCode, setOldCode] = useState("");
