@@ -111,6 +111,8 @@ const TabEditor = () => {
           value={activeTab}
           onChange={handleTabChange}
           aria-label="dynamic tabs example"
+          variant="scrollable"
+          scrollButtons="auto"
         >
           {tabs.map((tab, index) => (
             <Tab
