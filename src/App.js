@@ -6,6 +6,7 @@ import Home from "./page/Home";
 import MyHandsonTable from "./page/MyHandsonTable";
 import MyCKEditor from "./page/MyCKEditor";
 import MyDiffViewer from "./page/MyDiffViewer";
+import TabEditor from "./page/TabEditor";
 
 import "./App.css";
 
@@ -22,14 +23,17 @@ function App() {
         <span>
           <Link to="/diff-viewer">Diff Viewer</Link>
         </span>
-        
+        <span>
+          <Link to="/tabs">Tabs</Link>
+        </span>
       </div>
       <div>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/myHandsTable" element={<MyHandsonTable />} />
           <Route path="/ck-editor" element={<MyCKEditor />} />
-          <Route path="/diff-viewer" element={<MyDiffViewer />} />          
+          <Route path="/diff-viewer" element={<MyDiffViewer />} />
+          <Route path="/tabs" element={<TabEditor />} />          
         </Routes>
       </div>
     </div>
