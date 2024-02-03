@@ -9,6 +9,7 @@ import MyDiffViewer from "./page/MyDiffViewer";
 import TabEditor from "./page/TabEditor";
 
 import "./App.css";
+import Floating from "./page/Floating";
 
 function App() {
   return (
@@ -26,6 +27,10 @@ function App() {
         <span>
           <Link to="/tabs">Tabs</Link>
         </span>
+        <span>
+          <Link to="/floating">Floating</Link>
+        </span>
+        
       </div>
       <div>
         <Routes>
@@ -33,7 +38,8 @@ function App() {
           <Route path="/myHandsTable" element={<MyHandsonTable />} />
           <Route path="/ck-editor" element={<MyCKEditor />} />
           <Route path="/diff-viewer" element={<MyDiffViewer />} />
-          <Route path="/tabs" element={<TabEditor />} />          
+          <Route path="/tabs" element={<TabEditor />} />        
+          <Route path="/floating" element={<Floating />} />                    
         </Routes>
       </div>
     </div>
