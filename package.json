@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chatscope/chat-ui-kit-react": "^1.10.1",
+    "@chatscope/chat-ui-kit-styles": "^1.4.0",
     "@ckeditor/ckeditor5-build-classic": "^41.0.0",
     "@ckeditor/ckeditor5-react": "^6.2.0",
     "@emotion/react": "^11.11.3",
@@ -20,6 +22,7 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "crypto-js": "^4.2.0",
     "gh-pages": "^6.1.1",
     "handsontable": "^6.2.2",
     "react": "^18.2.0",

@@ -10,6 +10,8 @@ import TabEditor from "./page/TabEditor";
 
 import "./App.css";
 import Floating from "./page/Floating";
+import MyEncrypt from "./page/MyEncrypt";
+import ChatUI from "./page/ChatUI";
 
 function App() {
   return (
@@ -30,7 +32,12 @@ function App() {
         <span>
           <Link to="/floating">Floating</Link>
         </span>
-        
+        <span>
+          <Link to="/encrypt">Encrypt</Link>
+        </span>
+        {/* <span>
+          <Link to="/chat">Chat Room</Link>
+        </span>         */}
       </div>
       <div>
         <Routes>
@@ -39,7 +46,9 @@ function App() {
           <Route path="/ck-editor" element={<MyCKEditor />} />
           <Route path="/diff-viewer" element={<MyDiffViewer />} />
           <Route path="/tabs" element={<TabEditor />} />        
-          <Route path="/floating" element={<Floating />} />                    
+          <Route path="/floating" element={<Floating />} />       
+          <Route path="/encrypt" element={<MyEncrypt />} />                 
+          <Route path="/chat" element={<ChatUI />} />                              
         </Routes>
       </div>
     </div>
