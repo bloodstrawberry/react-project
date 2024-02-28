@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, TextField, Button } from "@mui/material";
 import CryptoJS from "crypto-js";
 
-const SECRET_KEY = "MY_SECRET_KEY";
+const SECRET_KEY = "MY_SECRET_KEY"; // or process.env.SECRET_KEY;
 
 const EncryptionComponent = () => {
   const [inputText1, setInputText1] = useState("");
@@ -10,7 +10,7 @@ const EncryptionComponent = () => {
 
   const [encryptedAESText, setEncryptedAESText] = useState("");
   const [decryptedAESText, setDecryptedAESText] = useState("");
-  const [hashedText, setHashedText] = useState('');
+  const [hashedText, setHashedText] = useState("");
 
   const encryptAES = () => {
     let encrypted = CryptoJS.AES.encrypt(inputText1, SECRET_KEY).toString();
@@ -18,11 +18,7 @@ const EncryptionComponent = () => {
   };
 
   const decryptAES = () => {
-    let decrypted = CryptoJS.AES.decrypt(
-      encryptedAESText,
-      SECRET_KEY
-    ).toString(CryptoJS.enc.Utf8);
-
+    let decrypted = CryptoJS.AES.decrypt(inputText1, SECRET_KEY).toString(CryptoJS.enc.Utf8);
     setDecryptedAESText(decrypted);
   };
 
