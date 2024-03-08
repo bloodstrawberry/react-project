@@ -11,6 +11,7 @@ import TabEditor from "./page/TabEditor";
 import "./App.css";
 import Floating from "./page/Floating";
 import MyEncrypt from "./page/MyEncrypt";
+import ChonkyBrowser from "./page/ChonkyBrowser";
 import ChatUI from "./page/ChatUI";
 
 function App() {
@@ -35,6 +36,9 @@ function App() {
         <span>
           <Link to="/encrypt">Encrypt</Link>
         </span>
+        <span>
+          <Link to="/filebrowser">File Browser</Link>
+        </span>
         {/* <span>
           <Link to="/chat">Chat Room</Link>
         </span>         */}
@@ -48,6 +52,8 @@ function App() {
           <Route path="/tabs" element={<TabEditor />} />        
           <Route path="/floating" element={<Floating />} />       
           <Route path="/encrypt" element={<MyEncrypt />} />                 
+          <Route path="/filebrowser" element={<ChonkyBrowser />} />                 
+          
           <Route path="/chat" element={<ChatUI />} />                              
         </Routes>
       </div>
