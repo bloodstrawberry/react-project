@@ -219,10 +219,17 @@ const ChonkyBrowser = React.memo((props) => {
         <FullFileBrowser
           files={files}
           folderChain={folderChain}
-          fileActions={fileActions}
+          fileActions={fileActions} 
           onFileAction={handleFileAction}
           thumbnailGenerator={thumbnailGenerator}
-          disableDefaultFileActions={false}
+          // disableDefaultFileActions={true} // default false
+          // doubleClickDelay={500} // ms
+          // disableSelection={true} // default false 파일 선택이 해제됨
+          // disableDragAndDrop={true} // 드래그 앤 드랍 기능 off
+          // disableDragAndDropProvider={true} // default false, Provider : 다른 드래그 앤 드롭은 유지
+          // defaultSortActionId={ChonkyActions.SortFilesByDate.id} // SortFilesByName, SortFilesBySize, SortFilesByDate
+          // defaultFileViewActionId={ChonkyActions.EnableListView.id} // EnableGridView, EnableListView  
+          // clearSelectionOnOutsideClick={false} // default true 브라우저 외부 클릭 시 파일 선택 해제
           {...props}
         />
       </div>
