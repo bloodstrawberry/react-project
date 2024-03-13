@@ -154,7 +154,8 @@ const useFileActionHandler = (
   setCurrentFolderId,
   deleteFiles,
   moveFiles,
-  createFolder
+  createFolder,
+  toggleDarkMode
 ) => {
   return useCallback(
     (data) => {
@@ -176,16 +177,23 @@ const useFileActionHandler = (
       } else if (data.id === ChonkyActions.CreateFolder.id) {
         const folderName = prompt("Provide the name for your new folder:");
         if (folderName) createFolder(folderName);
+      } else if (data.id === ChonkyActions.ToggleDarkMode.id) {
+        toggleDarkMode();
       }
 
       console.log(data);
       //showActionNotification(data);
     },
-    [createFolder, deleteFiles, moveFiles, setCurrentFolderId]
+    [createFolder, deleteFiles, moveFiles, setCurrentFolderId, toggleDarkMode]
   );
 };
 
 const ChonkyBrowser = React.memo((props) => {
+  const [darkMode, setDarkMode] = useState(false);
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  }
+
   const {
     fileMap,
     currentFolderId,
@@ -194,19 +202,31 @@ const ChonkyBrowser = React.memo((props) => {
     moveFiles,
     createFolder,
   } = useCustomFileMap();
+
   setChonkyDefaults({ iconComponent: ChonkyIconFA });
+  
   const files = useFiles(fileMap, currentFolderId);
   const folderChain = useFolderChain(fileMap, currentFolderId);
   const handleFileAction = useFileActionHandler(
     setCurrentFolderId,
     deleteFiles,
     moveFiles,
-    createFolder
+    createFolder,
+    toggleDarkMode
   );
+
   const fileActions = useMemo(
-    () => [ChonkyActions.CreateFolder, ChonkyActions.DeleteFiles],
+    () => [
+      ChonkyActions.CreateFolder,
+      ChonkyActions.DeleteFiles,
+      // ChonkyActions.CopyFiles,
+      // ChonkyActions.UploadFiles,
+      // ChonkyActions.DownloadFiles,
+      ChonkyActions.ToggleDarkMode,
+    ],
     []
   );
+
   const thumbnailGenerator = useCallback(
     (file) =>
       file.thumbnailUrl ? `https://chonky.io${file.thumbnailUrl}` : null,
@@ -230,6 +250,7 @@ const ChonkyBrowser = React.memo((props) => {
           // defaultSortActionId={ChonkyActions.SortFilesByDate.id} // SortFilesByName, SortFilesBySize, SortFilesByDate
           // defaultFileViewActionId={ChonkyActions.EnableListView.id} // EnableGridView, EnableListView  
           // clearSelectionOnOutsideClick={false} // default true 브라우저 외부 클릭 시 파일 선택 해제
+          darkMode={darkMode}
           {...props}
         />
       </div>
