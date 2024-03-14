@@ -1,4 +1,6 @@
 //App.js
+import React from "react";
+
 import { Route, Link, Routes } from "react-router-dom";
 
 //routing components
@@ -13,6 +15,7 @@ import Floating from "./page/Floating";
 import MyEncrypt from "./page/MyEncrypt";
 import ChonkyBrowser from "./page/ChonkyBrowser";
 import ChatUI from "./page/ChatUI";
+import ToastUIEditor from "./page/ToastUIEditor";
 
 function App() {
   return (
@@ -24,6 +27,9 @@ function App() {
         <span>
           <Link to="/ck-editor">CK Editor</Link>
         </span>
+        <span>
+          <Link to="/tui-editor">Toast UI</Link>
+        </span>        
         <span>
           <Link to="/diff-viewer">Diff Viewer</Link>
         </span>
@@ -48,6 +54,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/myHandsTable" element={<MyHandsonTable />} />
           <Route path="/ck-editor" element={<MyCKEditor />} />
+          <Route path="/tui-editor" element={<ToastUIEditor />} />
+          
           <Route path="/diff-viewer" element={<MyDiffViewer />} />
           <Route path="/tabs" element={<TabEditor />} />        
           <Route path="/floating" element={<Floating />} />       
