@@ -1,6 +1,18 @@
-import React, { useState, useCallback, useEffect, useRef, useMemo} from "react";
-import { setChonkyDefaults, ChonkyActions, FileHelper, FullFileBrowser} from "chonky";
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  useMemo,
+} from "react";
+import {
+  setChonkyDefaults,
+  ChonkyActions,
+  FileHelper,
+  FullFileBrowser,
+} from "chonky";
 import { ChonkyIconFA } from "chonky-icon-fontawesome";
+import { customActions } from "./myCustomActions";
 
 import Box from "@mui/material/Box";
 
@@ -112,6 +124,30 @@ const useCustomFileMap = () => {
     });
   }, []);
 
+  const createFile = useCallback((fileName) => {
+    setFileMap((currentFileMap) => {
+      const newFileMap = { ...currentFileMap };
+
+      const newFolderId = `new-folder-${idCounter.current++}`;
+      newFileMap[newFolderId] = {
+        id: newFolderId,
+        name: fileName,
+        modDate: new Date(),
+        parentId: currentFolderIdRef.current,
+        childrenIds: [],
+        childrenCount: 0,
+      };
+
+      const parent = newFileMap[currentFolderIdRef.current];
+      newFileMap[currentFolderIdRef.current] = {
+        ...parent,
+        childrenIds: [...parent.childrenIds, newFolderId],
+      };
+
+      return newFileMap;
+    });
+  }, []);
+
   return {
     fileMap,
     currentFolderId,
@@ -120,6 +156,7 @@ const useCustomFileMap = () => {
     deleteFiles,
     moveFiles,
     createFolder,
+    createFile,
   };
 };
 
@@ -151,11 +188,13 @@ const useFolderChain = (fileMap, currentFolderId) => {
 };
 
 const useFileActionHandler = (
+  folderChain,
   setCurrentFolderId,
   deleteFiles,
   moveFiles,
   createFolder,
-  toggleDarkMode
+  toggleDarkMode,
+  fileInputRef
 ) => {
   return useCallback(
     (data) => {
@@ -179,10 +218,18 @@ const useFileActionHandler = (
         if (folderName) createFolder(folderName);
       } else if (data.id === ChonkyActions.ToggleDarkMode.id) {
         toggleDarkMode();
+      } else if (data.id === "view") {
+        let fileNames = data.state.selectedFiles.map((item) => item.name);
+        let dirPath = folderChain.map((item) => item.name).join("/");
+
+        for (let name of fileNames) {
+          console.log(`${dirPath}/${name}`);
+        }
+      } else if (data.id === "upload") {
+        fileInputRef.current.click();
       }
 
       console.log(data);
-      //showActionNotification(data);
     },
     [createFolder, deleteFiles, moveFiles, setCurrentFolderId, toggleDarkMode]
   );
@@ -192,7 +239,9 @@ const ChonkyBrowser = React.memo((props) => {
   const [darkMode, setDarkMode] = useState(false);
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
-  }
+  };
+
+  const fileInputRef = useRef(null);
 
   const {
     fileMap,
@@ -201,22 +250,26 @@ const ChonkyBrowser = React.memo((props) => {
     deleteFiles,
     moveFiles,
     createFolder,
+    createFile,
   } = useCustomFileMap();
 
   setChonkyDefaults({ iconComponent: ChonkyIconFA });
-  
+
   const files = useFiles(fileMap, currentFolderId);
   const folderChain = useFolderChain(fileMap, currentFolderId);
   const handleFileAction = useFileActionHandler(
+    folderChain,
     setCurrentFolderId,
     deleteFiles,
     moveFiles,
     createFolder,
-    toggleDarkMode
+    toggleDarkMode,
+    fileInputRef
   );
 
   const fileActions = useMemo(
     () => [
+      ...customActions,
       ChonkyActions.CreateFolder,
       ChonkyActions.DeleteFiles,
       // ChonkyActions.CopyFiles,
@@ -233,13 +286,39 @@ const ChonkyBrowser = React.memo((props) => {
     []
   );
 
+  const fileUpload = async (e) => {
+    let files = e.target.files;
+    for (let file of files) {
+      if (file === undefined) continue;
+
+      console.log(file.name); // 파일 이름
+
+      createFile(file.name);
+      // 실제 파일 내용 read
+      // let fileReader = new FileReader();
+      // fileReader.readAsText(file, "utf-8"); // or euc-kr
+      // fileReader.onload = function () {
+      //   console.log(fileReader.result);
+      // };
+    }
+  };
+
   return (
     <Box sx={{ m: 2 }}>
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept=".json,.md"
+        style={{ display: "none" }}
+        multiple
+        onChange={(e) => fileUpload(e)}
+      />
+
       <div style={{ height: 400 }}>
         <FullFileBrowser
           files={files}
           folderChain={folderChain}
-          fileActions={fileActions} 
+          fileActions={fileActions}
           onFileAction={handleFileAction}
           thumbnailGenerator={thumbnailGenerator}
           // disableDefaultFileActions={true} // default false
@@ -248,7 +327,7 @@ const ChonkyBrowser = React.memo((props) => {
           // disableDragAndDrop={true} // 드래그 앤 드랍 기능 off
           // disableDragAndDropProvider={true} // default false, Provider : 다른 드래그 앤 드롭은 유지
           // defaultSortActionId={ChonkyActions.SortFilesByDate.id} // SortFilesByName, SortFilesBySize, SortFilesByDate
-          // defaultFileViewActionId={ChonkyActions.EnableListView.id} // EnableGridView, EnableListView  
+          // defaultFileViewActionId={ChonkyActions.EnableListView.id} // EnableGridView, EnableListView
           // clearSelectionOnOutsideClick={false} // default true 브라우저 외부 클릭 시 파일 선택 해제
           darkMode={darkMode}
           {...props}
