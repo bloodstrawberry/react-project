@@ -13,7 +13,6 @@ import TabEditor from "./page/TabEditor";
 import "./App.css";
 import Floating from "./page/Floating";
 import MyEncrypt from "./page/MyEncrypt";
-import ChonkyBrowser from "./page/ChonkyBrowser";
 import ChatUI from "./page/ChatUI";
 import ToastUIEditor from "./page/ToastUIEditor";
 import ChonkyLoader from "./page/ChonkyLoader";

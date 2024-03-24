@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { useLocation } from "react-router-dom";
+//import { useLocation } from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -38,7 +38,7 @@ const colorSyntaxOptions = {
 const CONTENT_KEY = "CONTENT_KEY";
 
 const ToastEditor = () => {
-  const location = useLocation();
+  //const location = useLocation();
 
   const editorRef = useRef(null);
   const [editMode, setEditMode] = useState(false);

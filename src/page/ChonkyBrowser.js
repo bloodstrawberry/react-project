@@ -6,7 +6,7 @@ import React, {
   useMemo,
 } from "react";
 
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 
 import {
   setChonkyDefaults,
@@ -26,7 +26,7 @@ const ChonkyBrowser = React.memo((props) => {
   };
 
   const fileInputRef = useRef(null);
-  const navigate  = useNavigate();
+  //const navigate  = useNavigate();
 
   // const demoMap = require("./demo.json");
   const demoMap = props.chonkyMap;
