@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import { useLocation } from "react-router-dom";
+
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+
+import * as gh from "./githublibrary.js";
 
 // Toast UI Editor
 import "@toast-ui/editor/dist/toastui-editor.css";
@@ -34,6 +38,8 @@ const colorSyntaxOptions = {
 const CONTENT_KEY = "CONTENT_KEY";
 
 const ToastEditor = () => {
+  const location = useLocation();
+
   const editorRef = useRef(null);
   const [editMode, setEditMode] = useState(false);
   let initData = `# 제목
@@ -51,8 +57,20 @@ const ToastEditor = () => {
     localStorage.setItem(CONTENT_KEY, markDownContent);
   };
 
-  useEffect(() => {
+  const init = async() => {
     let item = localStorage.getItem(CONTENT_KEY);
+    let open = localStorage.getItem("FILE_PATH");
+    
+    // if(location.state) {
+    if(open) {
+      // let filePath = location.state.filePath;
+      let filePath = JSON.parse(open).filePath;
+      let result = await gh.fileRead(`actions/${filePath}`);
+
+      if(result !== undefined) item = result;
+      
+      localStorage.removeItem("FILE_PATH");
+    }
 
     if (editMode === false) {
       const viewer = new Viewer({
@@ -73,6 +91,10 @@ const ToastEditor = () => {
       if (editorRef.current)
         editorRef.current.getInstance().setMarkdown(initData);
     }
+  }
+
+  useEffect(() => {
+    init();
   }, [editMode]);
 
   return (

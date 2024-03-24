@@ -16,6 +16,7 @@ import MyEncrypt from "./page/MyEncrypt";
 import ChonkyBrowser from "./page/ChonkyBrowser";
 import ChatUI from "./page/ChatUI";
 import ToastUIEditor from "./page/ToastUIEditor";
+import ChonkyLoader from "./page/ChonkyLoader";
 
 function App() {
   return (
@@ -24,9 +25,9 @@ function App() {
         <span>
           <Link to="/myHandsTable">HandsOnTable</Link>
         </span>
-        <span>
+        {/* <span>
           <Link to="/ck-editor">CK Editor</Link>
-        </span>
+        </span> */}
         <span>
           <Link to="/tui-editor">Toast UI</Link>
         </span>        
@@ -45,9 +46,9 @@ function App() {
         <span>
           <Link to="/filebrowser">File Browser</Link>
         </span>
-        {/* <span>
+        <span>
           <Link to="/chat">Chat Room</Link>
-        </span>         */}
+        </span>        
       </div>
       <div>
         <Routes>
@@ -60,7 +61,7 @@ function App() {
           <Route path="/tabs" element={<TabEditor />} />        
           <Route path="/floating" element={<Floating />} />       
           <Route path="/encrypt" element={<MyEncrypt />} />                 
-          <Route path="/filebrowser" element={<ChonkyBrowser />} />                 
+          <Route path="/filebrowser" element={<ChonkyLoader />} />                 
           
           <Route path="/chat" element={<ChatUI />} />                              
         </Routes>
