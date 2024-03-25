@@ -13,9 +13,11 @@ import TabEditor from "./page/TabEditor";
 import "./App.css";
 import Floating from "./page/Floating";
 import MyEncrypt from "./page/MyEncrypt";
-import ChatUI from "./page/ChatUI";
 import ToastUIEditor from "./page/ToastUIEditor";
 import ChonkyLoader from "./page/ChonkyLoader";
+
+import ChatLogin from "./ChatLogin";
+import ChatUI from "./page/ChatUI";
 
 function App() {
   return (
@@ -46,7 +48,7 @@ function App() {
           <Link to="/filebrowser">File Browser</Link>
         </span>
         <span>
-          <Link to="/chat">Chat Room</Link>
+          <Link to="/chat-login">Chat Room</Link>
         </span>        
       </div>
       <div>
@@ -62,6 +64,7 @@ function App() {
           <Route path="/encrypt" element={<MyEncrypt />} />                 
           <Route path="/filebrowser" element={<ChonkyLoader />} />                 
           
+          <Route path="/chat-login" element={<ChatLogin />} />                                        
           <Route path="/chat" element={<ChatUI />} />                              
         </Routes>
       </div>
