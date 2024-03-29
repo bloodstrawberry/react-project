@@ -61,22 +61,81 @@ const defaultMessage = [
   },
 ];
 
-const getMessageComponent = (data) => {
-  return data.map((item, index) => {
-    return (
-      <Message key={index} model={item.model}>
-        {item.avatar ? (
-          <Avatar src={item.avatar.src} name={item.avatar.name} />
-        ) : null}
-      </Message>
-    );
-  });
-};
+const defaultMessagePatrik = [
+  {
+    model: {
+      message: "Can you take care of this for me?",
+      direction: "outgoing",
+    },
+  },
+  {
+    model: {
+      message: "Yes i can do it for you",
+      direction: "incoming",
+    },
+    avatar: {
+      src: "https://chatscope.io/storybook/react/assets/patrik-yC7svbAR.svg",
+      name: "Patrik",
+    },
+  },
+];
+
+const totalMessages = [defaultMessage, defaultMessagePatrik];
+
+const defaultConversation = [
+  {
+    info: "I'm fine, too. thank you, and you?",
+    lastSenderName: "bloodstrawberry",
+    name: "bloodstrawberry",
+    src: AVATAR_IMAGE,
+    status: "available",
+  },
+  {
+    info: "Yes i can do it for you",
+    lastSenderName: "Patrik",
+    name: "Patrik",
+    src: "https://chatscope.io/storybook/react/assets/patrik-yC7svbAR.svg",
+    status: "invisible",
+  },
+];
 
 const ChatUI = () => {
   const location = useLocation();
   const [loginID, setLoginID] = useState("");
-  const [messages, setMessages] = useState(defaultMessage);
+
+  const [activeID, setActiveID] = useState(0);
+  const [messages, setMessages] = useState(totalMessages);
+
+  const getMessageComponent = (totalMessages) => {
+    let data = totalMessages[activeID];
+
+    return data.map((item, index) => {
+      return (
+        <Message key={index} model={item.model}>
+          {item.avatar ? (
+            <Avatar src={item.avatar.src} name={item.avatar.name} />
+          ) : null}
+        </Message>
+      );
+    });
+  };
+
+  const getConversationComponent = (data) => {
+    return data.map((item, index) => {
+      return (
+        <Conversation
+          key={index}
+          active={index === activeID}
+          info={item.info}
+          lastSenderName={item.lastSenderName}
+          name={item.name}
+          onClick={() => setActiveID(index)}
+        >
+          <Avatar name={item.name} src={item.src} status={item.status} />
+        </Conversation>
+      );
+    });
+  };
 
   const handleSend = (input) => {
     let newMessage = {
@@ -86,7 +145,9 @@ const ChatUI = () => {
       },
     };
 
-    setMessages([...messages, newMessage]);
+    let temp = [...totalMessages];
+    temp[activeID].push(newMessage);
+    setMessages(temp);
   };
 
   const init = () => {
@@ -113,39 +174,27 @@ const ChatUI = () => {
       >
         <Sidebar position="left">
           <ConversationList>
-            <Conversation
-              active
-              info="Yes i can do it for you"
-              lastSenderName="bloodstrawberry"
-              name="bloodstrawberry"
-            >
-              <Avatar
-                name="bloodstrawberry"
-                src={AVATAR_IMAGE}
-                status="available"
-              />
-            </Conversation>
-            <Conversation
-              info="Yes i can do it for you"
-              lastSenderName="Patrik"
-              name="Patrik"
-            >
-              <Avatar
-                name="Patrik"
-                src="https://chatscope.io/storybook/react/assets/patrik-yC7svbAR.svg"
-                status="invisible"
-              />
-            </Conversation>
+            {getConversationComponent(defaultConversation)}
           </ConversationList>
         </Sidebar>
         <ChatContainer>
           <ConversationHeader>
             <ConversationHeader.Back />
-            <Avatar name="bloodstrawberry" src={AVATAR_IMAGE} />
-            <ConversationHeader.Content
-              info="Active 10 mins ago"
-              userName="bloodstrawberry"
+            <Avatar
+              name={defaultConversation[activeID].name}
+              src={defaultConversation[activeID].src}
             />
+            {activeID === 0 ? (
+              <ConversationHeader.Content
+                info="Active 10 mins ago"
+                userName="bloodstrawberry"
+              />
+            ) : (
+              <ConversationHeader.Content
+                info="Active 7 hours ago"
+                userName="Patrik"
+              />
+            )}
             <ConversationHeader.Actions>
               <VoiceCallButton />
               <VideoCallButton />
