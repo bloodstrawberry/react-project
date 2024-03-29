@@ -55,6 +55,8 @@ const ToastEditor = () => {
     console.log(markDownContent);
     console.log(htmlContent);
     localStorage.setItem(CONTENT_KEY, markDownContent);
+
+    gh.fileWrite("README.md", markDownContent);
   };
 
   const init = async() => {
