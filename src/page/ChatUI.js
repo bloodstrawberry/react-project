@@ -32,66 +32,20 @@ const AVATAR_MAP = {
   Zoe: "https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg",
 };
 
-const defaultMessage = [
-  {
-    model: {
-      message: "How are you?",
-      direction: "incoming",
-    },
-    avatar: {
-      src: AVATAR_IMAGE,
-      name: "bloodstrawberry",
-    },
-  },
-  {
-    model: {
-      message: "I'm fine, thank you, and you?",
-      direction: "outgoing",
-    },
-  },
-  {
-    model: {
-      message: "I'm fine, too. thank you, and you?",
-      direction: "incoming",
-    },
-    avatar: {
-      src: AVATAR_IMAGE,
-      name: "bloodstrawberry",
-    },
-  },
-];
-
-const defaultMessagePatrik = [
-  {
-    model: {
-      message: "Can you take care of this for me?",
-      direction: "outgoing",
-    },
-  },
-  {
-    model: {
-      message: "Yes i can do it for you",
-      direction: "incoming",
-    },
-    avatar: {
-      src: "https://chatscope.io/storybook/react/assets/patrik-yC7svbAR.svg",
-      name: "Patrik",
-    },
-  },
-];
-
+const defaultMessage = [];
+const defaultMessagePatrik = [];
 const totalMessages = [defaultMessage, defaultMessagePatrik];
 
 const defaultConversation = [
   {
-    info: "I'm fine, too. thank you, and you?",
+    info: "",
     lastSenderName: "bloodstrawberry",
     name: "bloodstrawberry",
     src: AVATAR_IMAGE,
     status: "available",
   },
   {
-    info: "Yes i can do it for you",
+    info: "",
     lastSenderName: "Patrik",
     name: "Patrik",
     src: "https://chatscope.io/storybook/react/assets/patrik-yC7svbAR.svg",
@@ -110,7 +64,9 @@ const ChatUI = () => {
     let data = totalMessages[activeID];
 
     return data.map((item, index) => {
-      return (
+      return item.type === "separator" ? (
+        <MessageSeparator content={item.content} />
+      ) : (
         <Message key={index} model={item.model}>
           {item.avatar ? (
             <Avatar src={item.avatar.src} name={item.avatar.name} />
@@ -119,6 +75,27 @@ const ChatUI = () => {
       );
     });
   };
+
+  const changeRoom = (index) => {
+    if(activeID === index) return;
+    
+    let leftSeparator = {
+      type : "separator",
+      content : `${loginID} has left the chatroom.`,
+    }
+
+    let enterSeparator = {
+      type : "separator",
+      content : `${loginID} has entered the chatroom.`,
+    }
+
+    let temp = [...totalMessages];
+    temp[activeID].push(leftSeparator);
+    temp[index].push(enterSeparator);
+
+    setMessages(temp);
+    setActiveID(index);
+  }
 
   const getConversationComponent = (data) => {
     return data.map((item, index) => {
@@ -129,7 +106,7 @@ const ChatUI = () => {
           info={item.info}
           lastSenderName={item.lastSenderName}
           name={item.name}
-          onClick={() => setActiveID(index)}
+          onClick={() => changeRoom(index)}
         >
           <Avatar name={item.name} src={item.src} status={item.status} />
         </Conversation>
@@ -152,6 +129,16 @@ const ChatUI = () => {
 
   const init = () => {
     setLoginID(location.state.loginID);
+
+    let enterSeparator = {
+      type : "separator",
+      content : `${location.state.loginID} has entered the chatroom.`,
+    }
+
+    let temp = [...totalMessages];
+    temp[activeID].push(enterSeparator);
+
+    setMessages(temp);    
   };
 
   useEffect(init, []);
@@ -201,7 +188,10 @@ const ChatUI = () => {
               <InfoButton />
             </ConversationHeader.Actions>
           </ConversationHeader>
-          <MessageList>{getMessageComponent(messages)}</MessageList>
+          <MessageList>
+            {getMessageComponent(messages)}
+          </MessageList>
+
           <MessageInput placeholder="Type message here" onSend={handleSend} />
         </ChatContainer>
       </MainContainer>
