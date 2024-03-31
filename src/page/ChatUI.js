@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { io } from "socket.io-client";
 
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 
@@ -19,6 +20,8 @@ import {
   InfoButton,
   MessageSeparator,
 } from "@chatscope/chat-ui-kit-react";
+
+let socketIO = io("http://localhost:3333", { autoConnect: false });
 
 const AVATAR_IMAGE =
   "https://img1.daumcdn.net/thumb/C428x428/?scode=mtistory2&fname=https%3A%2F%2Ftistory3.daumcdn.net%2Ftistory%2F4431109%2Fattach%2F3af65be1d8b64ece859b8f6d07fafadc";
@@ -64,11 +67,15 @@ const ChatUI = () => {
     let data = totalMessages[activeID];
 
     return data.map((item, index) => {
+      if(item.type !== "separator") {
+        item.model.direction = item.avatar.name === loginID ? "outgoing" : "incoming";
+      }
+  
       return item.type === "separator" ? (
-        <MessageSeparator content={item.content} />
+        <MessageSeparator key={index} content={item.content} />
       ) : (
         <Message key={index} model={item.model}>
-          {item.avatar ? (
+          {item.avatar && item.model.direction === "incoming" ? (
             <Avatar src={item.avatar.src} name={item.avatar.name} />
           ) : null}
         </Message>
@@ -118,16 +125,24 @@ const ChatUI = () => {
     let newMessage = {
       model: {
         message: input,
-        direction: "outgoing",
+        // direction: "outgoing",
+      },
+      avatar: {
+        src: AVATAR_MAP[loginID],
+        name: loginID,
       },
     };
 
     let temp = [...totalMessages];
     temp[activeID].push(newMessage);
     setMessages(temp);
+
+    socketIO.emit("sendMessage", newMessage);
   };
 
   const init = () => {
+    socketIO.connect();
+    
     setLoginID(location.state.loginID);
 
     let enterSeparator = {
@@ -139,7 +154,23 @@ const ChatUI = () => {
     temp[activeID].push(enterSeparator);
 
     setMessages(temp);    
+    socketIO.emit("sendMessage", enterSeparator);
   };
+
+  const respondMessageCallback = (message) => {
+    let temp = [...totalMessages];
+    temp[activeID].push(message);
+    setMessages(temp);   
+  }
+
+  useEffect(() => {
+    if (!socketIO) return;
+
+    socketIO.on("respondMessage", respondMessageCallback);
+    return () => {
+      socketIO.off("respondMessage", respondMessageCallback);      
+    };
+  }, []);
 
   useEffect(init, []);
 
@@ -156,7 +187,7 @@ const ChatUI = () => {
       <MainContainer
         responsive
         style={{
-          height: "600px",
+          height: "300px",
         }}
       >
         <Sidebar position="left">
