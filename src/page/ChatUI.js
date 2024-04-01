@@ -100,6 +100,11 @@ const ChatUI = () => {
     temp[activeID].push(leftSeparator);
     temp[index].push(enterSeparator);
 
+    socketIO.emit("sendMessage", { message: leftSeparator, roomID: activeID });
+    socketIO.emit("leave", activeID);
+    socketIO.emit("enter", index);
+    socketIO.emit("sendMessage", { message: enterSeparator, roomID: index });
+
     setMessages(temp);
     setActiveID(index);
   }
@@ -137,7 +142,7 @@ const ChatUI = () => {
     temp[activeID].push(newMessage);
     setMessages(temp);
 
-    socketIO.emit("sendMessage", newMessage);
+    socketIO.emit("sendMessage", { message: newMessage, roomID: activeID });
   };
 
   const init = () => {
@@ -154,12 +159,15 @@ const ChatUI = () => {
     temp[activeID].push(enterSeparator);
 
     setMessages(temp);    
-    socketIO.emit("sendMessage", enterSeparator);
+    socketIO.emit("enter", activeID);
+    socketIO.emit("sendMessage", { message: enterSeparator, roomID: activeID });
   };
 
-  const respondMessageCallback = (message) => {
+  const respondMessageCallback = (data) => {
+    let { message, roomID } = data;
+
     let temp = [...totalMessages];
-    temp[activeID].push(message);
+    temp[roomID].push(message);
     setMessages(temp);   
   }
 
