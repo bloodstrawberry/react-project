@@ -149,6 +149,7 @@ const ChatUI = () => {
     socketIO.connect();
     
     setLoginID(location.state.loginID);
+    socketIO.emit("login", location.state.loginID);
 
     let enterSeparator = {
       type : "separator",
@@ -171,12 +172,17 @@ const ChatUI = () => {
     setMessages(temp);   
   }
 
+  const logout = () => {
+    window.alert("로그아웃 되었습니다.");
+    window.location.href = "/";
+  }
+
   useEffect(() => {
     if (!socketIO) return;
-
-    socketIO.on("respondMessage", respondMessageCallback);
+    socketIO.on("disconnect", logout);
+    socketIO.on("respondMessage", respondMessageCallback);  
     return () => {
-      socketIO.off("respondMessage", respondMessageCallback);      
+      socketIO.off("respondMessage", respondMessageCallback);            
     };
   }, []);
 
