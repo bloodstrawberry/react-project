@@ -149,7 +149,8 @@ const ChatUI = () => {
     socketIO.connect();
     
     setLoginID(location.state.loginID);
-    socketIO.emit("login", location.state.loginID);
+    // socketIO.emit("login", location.state.loginID);
+    socketIO.auth = { loginID : location.state.loginID };
 
     let enterSeparator = {
       type : "separator",
@@ -187,6 +188,18 @@ const ChatUI = () => {
   }, []);
 
   useEffect(init, []);
+
+  useEffect(() => {
+    socketIO.on("connect_error", (err) => {
+      console.error(err);
+      if (err.message === "Login ID is undefined!") {
+        console.log("비정상 로그인!");
+      } else if (err.message === "Login ID already exists!") {
+        window.alert(err.message);
+        window.location.href = "/";
+      }
+    });
+  }, []);
 
   return (
     <div>
