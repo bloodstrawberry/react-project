@@ -16,20 +16,25 @@ import MyEncrypt from "./page/MyEncrypt";
 import ToastUIEditor from "./page/ToastUIEditor";
 import ChonkyLoader from "./page/ChonkyLoader";
 
+import TableLogin from "./TableLogin";
 import ChatLogin from "./ChatLogin";
 import ChatUI from "./page/ChatUI";
+import SocketTable from "./page/SocketTable";
 
 function App() {
   return (
     <div className="App">
       <div className="router">
-        <span>
+      <span>
+          <Link to="/table-login">Table</Link>
+        </span>     
+        {/* <span>
           <Link to="/myHandsTable">HandsOnTable</Link>
-        </span>
+        </span>  */}
         {/* <span>
           <Link to="/ck-editor">CK Editor</Link>
         </span> */}
-        <span>
+        {/* <span>
           <Link to="/tui-editor">Toast UI</Link>
         </span>        
         <span>
@@ -49,11 +54,13 @@ function App() {
         </span>
         <span>
           <Link to="/chat-login">Chat Room</Link>
-        </span>        
+        </span>         */}
       </div>
       <div>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/socket-table" element={<SocketTable />} />
+          
           <Route path="/myHandsTable" element={<MyHandsonTable />} />
           <Route path="/ck-editor" element={<MyCKEditor />} />
           <Route path="/tui-editor" element={<ToastUIEditor />} />
@@ -64,6 +71,8 @@ function App() {
           <Route path="/encrypt" element={<MyEncrypt />} />                 
           <Route path="/filebrowser" element={<ChonkyLoader />} />                 
           
+          
+          <Route path="/table-login" element={<TableLogin />} />  
           <Route path="/chat-login" element={<ChatLogin />} />                                        
           <Route path="/chat" element={<ChatUI />} />                              
         </Routes>

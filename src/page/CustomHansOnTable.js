@@ -9,6 +9,83 @@ import Button from "@mui/material/Button";
 import styled from "styled-components";
 import HandsontableToggleButton from "./HandsontableToggleButton";
 
+class Rectangle extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showTooltip: false,
+      mouseX: 0,
+      mouseY: 0,
+    };
+  }
+
+  handleMouseEnter = (event) => {
+    const { clientX, clientY } = event;
+    this.setState({
+      showTooltip: true,
+      mouseX: clientX,
+      mouseY: clientY,
+    });
+  };
+
+  handleMouseLeave = () => {
+    this.setState({
+      showTooltip: false,
+    });
+  };
+
+  render() {
+    const { top, left, width, height } = this.props;
+    const { showTooltip, mouseX, mouseY } = this.state;
+
+    const style = {
+      zIndex: 1000,
+      position: "absolute",
+      top: top,
+      left: left,
+      width: width,
+      height: height,
+      boxShadow: `inset 0 0 0 2px red`,
+      backgroundColor: "transparent",
+      pointerEvents: "none",
+    };
+
+    const smallSquareStyle = {
+      zIndex: 1500,
+      position: "absolute",
+      bottom: -5,
+      right: -5,
+      width: 10,
+      height: 10,
+      backgroundColor: "blue",
+      cursor: "pointer",
+      pointerEvents: "auto",
+    };
+
+    const tooltipStyle = {
+      position: "fixed",
+      top: mouseY + 10,
+      left: mouseX + 10,
+      backgroundColor: "rgba(0, 0, 0, 0.7)",
+      color: "white",
+      padding: "5px",
+      borderRadius: "3px",
+      display: showTooltip ? "block" : "none",
+    };
+
+    return (
+      <div style={style}>
+        <div
+          style={smallSquareStyle}
+          onMouseEnter={this.handleMouseEnter}
+          onMouseLeave={this.handleMouseLeave}
+        ></div>
+        <div style={tooltipStyle}>This is a tooltip</div>
+      </div>
+    );
+  }
+}
+
 const DisplayCellStyle = styled.div`
   span {
     background-color: #33ceff;
@@ -266,8 +343,8 @@ const CustomHansOnTable = ({ myOptions }) => {
     //       selectOptions: ['Kia', 'Nissan', 'Toyota', 'Honda']
     //     },
     //   ],
-    
-    cells: function(row, col, prop) {
+
+    cells: function (row, col, prop) {
       if (localCellStyle === null) return {};
 
       let cellProperties = {};
@@ -275,13 +352,15 @@ const CustomHansOnTable = ({ myOptions }) => {
       cellProperties.className =
         localCellStyle[row][col].className || "htCenter htMiddle"; // undefined 처리
 
-      cellProperties.renderer = function(instance, td) {
+      cellProperties.renderer = function (instance, td) {
         Handsontable.renderers.TextRenderer.apply(this, arguments);
         td.style.fontWeight = localCellStyle[row][col].style.fontWeight || "";
         td.style.fontStyle = localCellStyle[row][col].style.fontStyle || "";
-        td.style.textDecoration = localCellStyle[row][col].style.textDecoration || "";
+        td.style.textDecoration =
+          localCellStyle[row][col].style.textDecoration || "";
         td.style.color = localCellStyle[row][col].style.color || "#000000";
-        td.style.backgroundColor = localCellStyle[row][col].style.backgroundColor || "#FFFFFF";
+        td.style.backgroundColor =
+          localCellStyle[row][col].style.backgroundColor || "#FFFFFF";
       };
 
       return cellProperties;
@@ -324,7 +403,7 @@ const CustomHansOnTable = ({ myOptions }) => {
       ...myOptions.cellInfo,
     });
 
-    myTable.addHook("afterMergeCells", function(cellRange, mergeParent, auto) {
+    myTable.addHook("afterMergeCells", function (cellRange, mergeParent, auto) {
       let temp = getMergeCells();
       temp.push(mergeParent);
       temp = temp.filter(
@@ -334,7 +413,7 @@ const CustomHansOnTable = ({ myOptions }) => {
       localStorage.setItem(MERGE_CELLS_KEY, JSON.stringify([...temp]));
     });
 
-    myTable.addHook("afterColumnResize", function(col, width) {
+    myTable.addHook("afterColumnResize", function (col, width) {
       let localOptions = localStorage.getItem(MY_OPTIONS);
 
       if (localOptions === null) {
@@ -352,7 +431,7 @@ const CustomHansOnTable = ({ myOptions }) => {
       localStorage.setItem(MY_OPTIONS, JSON.stringify(localOptions));
     });
 
-    myTable.addHook("afterRowResize", function(row, height) {
+    myTable.addHook("afterRowResize", function (row, height) {
       let localOptions = localStorage.getItem(MY_OPTIONS);
 
       if (localOptions === null) {
@@ -425,8 +504,41 @@ const CustomHansOnTable = ({ myOptions }) => {
     document.body.removeChild(link);
   };
 
+  const test = () => {
+    let selected = myHandsOnTable.getSelected();
+    console.log(selected);
+    console.log(selected[0][0], selected[0][1]);
+
+    let startRow = selected[0][0];
+    let startCol = selected[0][1];
+    const cellElement = myHandsOnTable.getCell(startRow, startCol);
+
+    console.log(cellElement);
+    const cellRect = cellElement.getBoundingClientRect();
+    console.log(cellElement.offsetLeft);
+    console.log(cellElement.offsetTop);
+
+    const x = cellRect.left + window.scrollX;
+    const y = cellRect.top + window.scrollY;
+    console.log("X 좌표:", x, "Y 좌표:", y);
+    console.log(cellRect, cellElement);
+  };
+
   return (
     <div>
+      <Rectangle top="666px" left="194px" width="60px" height="26px" />
+      <Rectangle top="332px" left="131px" width="5px" height="5px" />
+
+      <button onClick={test}>test</button>
+      <p>1</p>
+      <p>1</p>
+
+      <p>1</p>
+      <p>1</p>
+      <p>1</p>
+      <p>1</p>
+      <p>1</p>
+
       <Box sx={{ m: 2 }}>
         <Button
           sx={{ m: 2 }}

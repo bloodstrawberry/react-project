@@ -17,7 +17,7 @@ const DisplayCellStyle = styled.div`
   }
 `;
 
-const CustomHansOnTable = ({ data, setTable, customOptions }) => {
+const SimpleHandsOnTable = ({ data, setTable, customOptions }) => {
   const [displayCellInfo, setDisplaySetInfo] = useState("");
   const [selectedCell, setSelectedCell] = useState([0, 0]);
 
@@ -58,8 +58,7 @@ const CustomHansOnTable = ({ data, setTable, customOptions }) => {
     trimWhitespace: false /* 자동 trim() 실행 후 셀에 저장 */,
     contextMenu: true /* 마우스 왼쪽 버튼 클릭 시 컨텍스트 메뉴 */,
     comments: true /* 주석, 메모 기능 context menu에 추가 */,
-    manualColumnFreeze: true /* freezeColumn context menu에 추가 */,
-
+    manualColumnFreeze: true /* freezeColumn context menu에 추가 */,    
     className: "htMiddle htCenter" /* Cell Alignment */,
     width: 1000,
     height: 1000,
@@ -104,4 +103,4 @@ const CustomHansOnTable = ({ data, setTable, customOptions }) => {
   );
 };
 
-export default CustomHansOnTable;
+export default SimpleHandsOnTable;

@@ -1,0 +1,9 @@
+.custom {
+    z-index: 1000;
+    position: relative;
+    top: top;
+    left: left;
+    box-shadow: inset 0 0 0 2px red;
+    background-color: transparent;
+    pointer-events: "none";
+}

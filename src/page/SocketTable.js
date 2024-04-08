@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 
 import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 
+import { io } from "socket.io-client";
+
 import {
   Avatar,
   Conversation,
@@ -29,36 +31,33 @@ const data = [
   ["2021", 10, 11, 12, 13, 15, 16],
 ];
 
-const data2 = [
-  ["", "Tesla", "Nissan", "Toyota", "Honda", "Mazda", "Ford"],
-  ["2017", 10, 11, 12, 13, 15, 16],
-  ["2018", 10, 11, 12, 13, 15, 16],
-];
-
+let socketIO = io("http://localhost:3333", { autoConnect: false });
 
 const customOptions = {
   afterChange: function (changes, source) {
-    // changes 매개변수에 변경된 데이터 정보
-    // source 매개변수는 변경을 발생시킨 원인
+    // changes : 변경된 데이터 정보, source : 변경을 발생시킨 원인
+    if (source === "loadData") return;
 
     console.log("Changed Data :", source, changes);
+
+    socketIO.emit("sendData", this.getData());
   },
-  afterCreateRow: function(index, amount) {
-    // 행이 추가된 후에 호출되는 후크
-    console.log('추가된 행:', index, amount);
+  afterCreateRow: function (index, amount) {
+    console.log("create row :", index, amount);
+    socketIO.emit("sendData", this.getData());
   },
-  afterRemoveRow: function(index, amount) {
-    // 행이 삭제된 후에 호출되는 후크
-    console.log('제거된 행:', index, amount);
+  afterRemoveRow: function (index, amount) {
+    console.log("remove row :", index, amount);
+    socketIO.emit("sendData", this.getData());
   },
-  afterCreateCol: function(index, amount) {
-    // 열이 추가된 후에 호출되는 후크
-    console.log('추가된 열:', index, amount);
+  afterCreateCol: function (index, amount) {
+    console.log("create col :", index, amount);
+    socketIO.emit("sendData", this.getData());
   },
-  afterRemoveCol: function(index, amount) {
-    // 열이 삭제된 후에 호출되는 후크
-    console.log('제거된 열:', index, amount);
-  }
+  afterRemoveCol: function (index, amount) {
+    console.log("remove col :", index, amount);
+    socketIO.emit("sendData", this.getData());
+  },
 };
 
 const SocketTable = () => {
@@ -66,7 +65,7 @@ const SocketTable = () => {
   const [loginID, setLoginID] = useState("");
 
   const [tableData, setTableData] = useState(data);
-  const [handsOnTable, setHandsOnTable] = useState(undefined);
+  // const [handsOnTable, setHandsOnTable] = useState(undefined);
 
   const init = () => {
     setLoginID(location.state.loginID);
@@ -74,24 +73,23 @@ const SocketTable = () => {
 
   useEffect(init, []);
 
-  const test = () => {
-    setTableData((table) => {
-      table[2][3] = "sex";
-      table[10][10] = "haza";
-      console.log(table);
-      return JSON.parse(JSON.stringify(table));
-    });
+  const respondDataCallback = (newData) => {
+    setTableData(newData);
+  };
 
-    // tableData[2][3] = "sex";
-    // setTableData(data2);
+  useEffect(() => {
+    socketIO.connect();
+    if (!socketIO) return;
 
-    // console.log(tableData);
-    //setTableData(data2)
-  }
+    socketIO.on("respondData", respondDataCallback);
+
+    return () => {
+      socketIO.off("respondData", respondDataCallback);
+    };
+  }, []);
 
   return (
     <div>
-      <button onClick={test}>test</button>
       <Conversation
         info="I'm fine, thank you, and you?"
         lastSenderName={loginID}
@@ -102,7 +100,7 @@ const SocketTable = () => {
       <MessageSeparator style={{ marginTop: 5, marginBottom: 5 }} />
       <SimpleHandsOnTable
         data={tableData}
-        setTable={setHandsOnTable}
+        // setTable={setHandsOnTable}
         customOptions={customOptions}
       />
     </div>
