@@ -77,7 +77,7 @@ const SimpleHandsOnTable = ({ data, setTable, customOptions }) => {
     const container = document.getElementById("hot-app");
     container.innerHTML = "";
 
-    console.log(options);
+    //console.log(options);
     myTable = new Handsontable(container, {
       ...options,
       ...customOptions,

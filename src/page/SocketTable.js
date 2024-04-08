@@ -39,7 +39,6 @@ const customOptions = {
     if (source === "loadData") return;
 
     console.log("Changed Data :", source, changes);
-
     socketIO.emit("sendData", this.getData());
   },
   afterCreateRow: function (index, amount) {
@@ -86,6 +85,12 @@ const SocketTable = () => {
     return () => {
       socketIO.off("respondData", respondDataCallback);
     };
+  }, []);
+
+  useEffect(() => {
+    socketIO.once("initData", (data) => {
+      if(data.currentData) setTableData(data.currentData);
+    });
   }, []);
 
   return (
