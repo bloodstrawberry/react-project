@@ -17,7 +17,13 @@ const DisplayCellStyle = styled.div`
   }
 `;
 
-const SimpleHandsOnTable = ({ data, setTable, customOptions }) => {
+const SimpleHandsOnTable = ({
+  data,
+  rowHeights,
+  colWidths,
+  setTable,
+  customOptions,
+}) => {
   const [displayCellInfo, setDisplaySetInfo] = useState("");
   const [selectedCell, setSelectedCell] = useState([0, 0]);
 
@@ -58,19 +64,18 @@ const SimpleHandsOnTable = ({ data, setTable, customOptions }) => {
     trimWhitespace: false /* 자동 trim() 실행 후 셀에 저장 */,
     contextMenu: true /* 마우스 왼쪽 버튼 클릭 시 컨텍스트 메뉴 */,
     comments: true /* 주석, 메모 기능 context menu에 추가 */,
-    manualColumnFreeze: true /* freezeColumn context menu에 추가 */,    
+    manualColumnFreeze: true /* freezeColumn context menu에 추가 */,
     className: "htMiddle htCenter" /* Cell Alignment */,
     width: 1000,
     height: 1000,
     startCols: 5 /* data가 없는 경우 기본 설정 */,
     startRows: 3 /* data가 없는 경우 기본 설정 */,
     afterSelection: cellSelected,
-    colWidths: 60 /* 특정 위치 너비 변경 : [60, 120, 60, 60, 60, 60, 60] */,
-    rowHeights: 25,
-
+    colWidths /* 특정 위치 너비 변경 : [60, 120, 60, 60, 60, 60, 60] */,
+    rowHeights,
+    //mergeCells: [],
     licenseKey: "non-commercial-and-evaluation",
   };
-
 
   let myTable;
   const makeTable = () => {
@@ -84,12 +89,12 @@ const SimpleHandsOnTable = ({ data, setTable, customOptions }) => {
     });
 
     myTable.render();
-    if(setTable) setTable(myTable);
+    if (setTable) setTable(myTable);
   };
 
   useEffect(() => {
     makeTable();
-  }, [data]);
+  }, [data, rowHeights, colWidths]);
 
   return (
     <div>
