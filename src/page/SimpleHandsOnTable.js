@@ -18,9 +18,7 @@ const DisplayCellStyle = styled.div`
 `;
 
 const SimpleHandsOnTable = ({
-  data,
-  rowHeights,
-  colWidths,
+  tableInfo,
   setTable,
   customOptions,
 }) => {
@@ -39,7 +37,7 @@ const SimpleHandsOnTable = ({
   };
 
   const options = {
-    data,
+    data: tableInfo.data,
     colHeaders: true,
     rowHeaders: true,
     wordWrap: false /* 줄 바꿈 off */,
@@ -71,8 +69,8 @@ const SimpleHandsOnTable = ({
     startCols: 5 /* data가 없는 경우 기본 설정 */,
     startRows: 3 /* data가 없는 경우 기본 설정 */,
     afterSelection: cellSelected,
-    colWidths /* 특정 위치 너비 변경 : [60, 120, 60, 60, 60, 60, 60] */,
-    rowHeights,
+    colWidths: tableInfo.colWidths /* 특정 위치 너비 변경 : [60, 120, 60, 60, 60, 60, 60] */,
+    rowHeights: tableInfo.rowHeights,
     //mergeCells: [],
     licenseKey: "non-commercial-and-evaluation",
   };
@@ -81,6 +79,8 @@ const SimpleHandsOnTable = ({
   const makeTable = () => {
     const container = document.getElementById("hot-app");
     container.innerHTML = "";
+
+    console.log(tableInfo);
 
     //console.log(options);
     myTable = new Handsontable(container, {
@@ -94,7 +94,7 @@ const SimpleHandsOnTable = ({
 
   useEffect(() => {
     makeTable();
-  }, [data, rowHeights, colWidths]);
+  }, [tableInfo]);
 
   return (
     <div>

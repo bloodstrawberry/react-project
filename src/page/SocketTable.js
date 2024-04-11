@@ -36,16 +36,18 @@ let socketIO = io("http://localhost:3333", { autoConnect: false });
 const getRowHeights = (handsOnTable) => {
   let countRows = handsOnTable.countRows();
   let rowHeights = [];
-  for(let r = 0; r < countRows; r++) rowHeights.push(handsOnTable.getRowHeight(r));
+  for (let r = 0; r < countRows; r++)
+    rowHeights.push(handsOnTable.getRowHeight(r));
   return rowHeights;
-}
+};
 
 const getColWidths = (handsOnTable) => {
   let countCols = handsOnTable.countCols();
   let colWidths = [];
-  for(let c = 0; c < countCols; c++) colWidths.push(handsOnTable.getColWidth(c));
+  for (let c = 0; c < countCols; c++)
+    colWidths.push(handsOnTable.getColWidth(c));
   return colWidths;
-}
+};
 
 const insertRows = (table, rowIndex, amount) => {
   const afterIndex = table.slice(rowIndex);
@@ -141,82 +143,94 @@ const moveRowTable = (table, movedRows, finalIndex) => {
 
 const moveColumnTable = (table, movedColumns, finalIndex) => {
   let transposedTable = transpose(table);
-  console.log({table});
+  console.log({ table });
   console.log(movedColumns, finalIndex);
-  console.log({transposedTable});
+  console.log({ transposedTable });
   let movedTable = moveRowTable(transposedTable, movedColumns, finalIndex);
-  console.log({movedTable});
+  console.log({ movedTable });
   console.log(transpose(movedTable));
   return transpose(movedTable);
-}
+};
 
 const SocketTable = () => {
   const location = useLocation();
   const [loginID, setLoginID] = useState("");
 
-  const [tableData, setTableData] = useState(defaultData);
-  const [rowHeights, setRowHeights] = useState(25);
-  const [colWidths, setColWidths] = useState(60);
+  const [tableInfo, setTableInfo] = useState({
+    data: defaultData,
+    rowHeights: 25,
+    colWidths: 60,
+  });
 
   const customOptions = {
     afterChange: function (changes, source) {
       // changes : 변경된 데이터 정보, source : 변경을 발생시킨 원인
       if (source === "loadData") return;
-  
+
       console.log("Changed Data :", source, changes);
       socketIO.emit("changeData", changes);
     },
     afterCreateRow: function (index, amount) {
       console.log("create row :", index, amount);
-  
+
       let rowHeights = getRowHeights(this);
       socketIO.emit("createRow", index, amount, rowHeights);
     },
     afterRemoveRow: function (index, amount) {
       console.log("remove row :", index, amount);
-  
+
       let rowHeights = getRowHeights(this);
       socketIO.emit("removeRow", index, amount, rowHeights);
     },
     afterCreateCol: function (index, amount) {
       console.log("create col :", index, amount);
-  
+
       let colWidths = getColWidths(this);
       socketIO.emit("createCol", index, amount, colWidths);
     },
     afterRemoveCol: function (index, amount) {
       console.log("remove col :", index, amount);
-  
+
       let colWidths = getColWidths(this);
       socketIO.emit("removeCol", index, amount, colWidths);
     },
     afterRowMove: function (movedRows, finalIndex, dropIndex, movePossible, orderChanged) {
       console.log("move row", movedRows, finalIndex, dropIndex, movePossible, orderChanged);
-  
-      let rowHeights = getRowHeights(this);
 
-      setRowHeights(rowHeights);
-      setTableData(this.getData());  
+      let rowHeights = getRowHeights(this);
+      setTableInfo((prev) => {
+        return {
+          ...prev,
+          data: this.getData(),
+          rowHeights,
+        };
+      });
+
       socketIO.emit("moveRow", movedRows, finalIndex, rowHeights);
     },
     afterColumnMove: function (movedColumns, finalIndex, dropIndex, movePossible, orderChanged) {
       console.log("move col", movedColumns, finalIndex, dropIndex, movePossible, orderChanged);
-  
-      let colWidths = getColWidths(this);
 
-      setColWidths(colWidths);
-      setTableData(this.getData());
+      let colWidths = getColWidths(this);
+      setTableInfo((prev) => {
+        return {
+          ...prev,
+          data: this.getData(),
+          colWidths,
+        };
+      });
+
       socketIO.emit("moveCol", movedColumns, finalIndex, colWidths);
     },
     afterRowResize: function (newSize, row, isDoubleClick) {
       console.log("resize row");
-  
+
       let rowHeights = getRowHeights(this);
       socketIO.emit("resizeRow", rowHeights);
     },
     afterColumnResize: function (newSize, column, isDoubleClick) {
       console.log("resize col");
-  
+
       let colWidths = getColWidths(this);
       socketIO.emit("resizeCol", colWidths);
     },
@@ -234,89 +248,119 @@ const SocketTable = () => {
 
   const resCreateRow = (index, amount, currentRowHeights) => {
     console.log("createRow", index, amount, currentRowHeights);
-    setTableData((prev) => {
-      let newTable = insertRows(prev, index, amount);
-      return newTable;
-    });
 
-    setRowHeights(currentRowHeights);
+    setTableInfo((prev) => {
+      let newTable = insertRows(prev.data, index, amount);
+      return {
+        ...prev,
+        data: newTable,
+        rowHeights: currentRowHeights,
+      };
+    });
   };
 
   const resRemoveRow = (index, amount, currentRowHeights) => {
     console.log("removeRow", index, amount, currentRowHeights);
-    setTableData((prev) => {
-      let newTable = deleteRows(prev, index, amount);
-      return newTable;
-    });
 
-    setRowHeights(currentRowHeights);
+    setTableInfo((prev) => {
+      let newTable = deleteRows(prev.data, index, amount);
+      return {
+        ...prev,
+        data: newTable,
+        rowHeights: currentRowHeights,
+      };
+    });
   };
 
   const resCreateCol = (index, amount, currentColWidths) => {
     console.log("createCol", index, amount, currentColWidths);
-    setTableData((prev) => {
-      let newTable = insertColumns(prev, index, amount);
-      return newTable;
-    });
 
-    setColWidths(currentColWidths);
+    setTableInfo((prev) => {
+      let newTable = insertColumns(prev.data, index, amount);
+      return {
+        ...prev,
+        data: newTable,
+        colWidths: currentColWidths,
+      };
+    });
   };
 
   const resRemoveCol = (index, amount, currentColWidths) => {
     console.log("removeCol", index, amount, currentColWidths);
-    setTableData((prev) => {
-      let newTable = deleteColumns(prev, index, amount);
-      return newTable;
-    });
 
-    setColWidths(currentColWidths);
+    setTableInfo((prev) => {
+      let newTable = deleteColumns(prev.data, index, amount);
+      return {
+        ...prev,
+        data: newTable,
+        colWidths: currentColWidths,
+      };
+    });
   };
 
   const resChangeData = (changes, currentRowHeights, currentColWidths) => {
     console.log("changeData", changes, currentRowHeights, currentColWidths);
-    setTableData((prev) => {
-      let newTable = [...prev];
+
+    setTableInfo((prev) => {
+      let newTable = [...prev.data];
       for (let change of changes) {
         let [row, col, before, after] = change;
         newTable[row][col] = after;
       }
-      return newTable;
-    });
 
-    setRowHeights(currentRowHeights);
-    setColWidths(currentColWidths);
+      return {
+        ...prev,
+        data: newTable,
+        rowHeights: currentRowHeights,
+        colWidths: currentColWidths,
+      };
+    });
   };
 
   const resMoveRow = (movedRows, finalIndex, currentRowHeights) => {
     console.log("resMoveRow", movedRows, finalIndex, currentRowHeights);
-    setTableData((prev) => {
-      let newTable = moveRowTable(prev, movedRows, finalIndex);
-      return newTable;
+
+    setTableInfo((prev) => {
+      let newTable = moveRowTable(prev.data, movedRows, finalIndex);
+      return {
+        ...prev,
+        data: newTable,
+        rowHeights: currentRowHeights,
+      };
     });
-    
-    setRowHeights(currentRowHeights);
   };
 
   const resMoveCol = (movedColumns, finalIndex, currentColWidths) => {
     console.log("resMoveCol", movedColumns, finalIndex, currentColWidths);
-    setTableData((prev) => {
-      console.log({prev})
-      let newTable = moveColumnTable(prev, movedColumns, finalIndex);
-      console.log({newTable});
-      return newTable;
-    });
 
-    setColWidths(currentColWidths);
+    setTableInfo((prev) => {
+      let newTable = moveColumnTable(prev.data, movedColumns, finalIndex);
+      return {
+        ...prev,
+        data: newTable,
+        colWidths: currentColWidths,
+      };
+    });
   };
 
   const resResizeRow = (rowHeights) => {
     console.log("resResizeRow", rowHeights);
-    setRowHeights(rowHeights);
+    setTableInfo((prev) => {
+      return {
+        ...prev,
+        rowHeights,
+      };
+    });
   };
 
   const resResizeCol = (colWidths) => {
     console.log("resResizeCol", colWidths);
-    setColWidths(colWidths);
+    setTableInfo((prev) => {
+      return {
+        ...prev,
+        colWidths,
+      };
+    });
   };
 
   useEffect(() => {
@@ -352,18 +396,18 @@ const SocketTable = () => {
     socketIO.once("initData", (data) => {
       console.log(data);
       if (data.currentData) {
-        setTableData(data.currentData);
-        setRowHeights(data.currentRowHeights);
-        setColWidths(data.currentColWidths);
+        setTableInfo({
+          data: data.currentData,
+          rowHeights: data.currentRowHeights,
+          colWidths: data.currentColWidths,
+        });
       } else {
         let basicRowHeight = 25;
         let basicColWidth = 60;
         let initRowHeights = new Array(defaultData.length).fill(basicRowHeight);
-        let initColWidths = new Array(defaultData[0].length).fill(
-          basicColWidth
-        );
+        let initColWidths = new Array(defaultData[0].length).fill(basicColWidth);
 
-        socketIO.emit("setCurrentData", tableData);
+        socketIO.emit("setCurrentData", defaultData);
         socketIO.emit("setRowHeights", initRowHeights);
         socketIO.emit("setColWidths", initColWidths);
       }
@@ -371,7 +415,7 @@ const SocketTable = () => {
   }, []);
 
   return (
-    <div>    
+    <div>
       <Conversation
         info="I'm fine, thank you, and you?"
         lastSenderName={loginID}
@@ -380,12 +424,7 @@ const SocketTable = () => {
         <Avatar name={loginID} src={AVATAR_MAP[loginID]} status="available" />
       </Conversation>
       <MessageSeparator style={{ marginTop: 5, marginBottom: 5 }} />
-      <SimpleHandsOnTable
-        data={tableData}
-        rowHeights={rowHeights}
-        colWidths={colWidths}
-        customOptions={customOptions}
-      />
+      <SimpleHandsOnTable tableInfo={tableInfo} customOptions={customOptions} />
     </div>
   );
 };
