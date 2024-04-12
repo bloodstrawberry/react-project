@@ -90,7 +90,6 @@ const SimpleHandsOnTable = ({
     });
 
     let highlights = tableInfo.highlights;
-
     let mouseX, mouseY, showTooltip = false;
 
     // cell에 mouse를 over하는 경우 tooltip calssName를 추가
@@ -133,10 +132,16 @@ const SimpleHandsOnTable = ({
       }
     });
 
-    for(let cell of highlights) {
-      let {row, col, borderColor} = cell;
+    for (let cell of highlights) {
+      let { row, col, borderColor } = cell;
       let currentClassName = myTable.getCellMeta(row, col).className;
-      myTable.setCellMeta(row, col, "className", `${currentClassName} show_tooltip ${styles.custom} ${styles[`box_${borderColor}`]}`);
+      myTable.setCellMeta(
+        row,
+        col,
+        "className",
+        `${currentClassName} ${styles.custom} ${styles[`box_${borderColor}`]
+        }`
+      );
     }
 
     myTable.render();
