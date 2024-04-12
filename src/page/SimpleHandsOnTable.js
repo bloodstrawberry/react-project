@@ -6,6 +6,7 @@ import "handsontable/dist/handsontable.full.min.css";
 import Box from "@mui/material/Box";
 
 import styled from "styled-components";
+import styles from "./CustomTable.module.css";
 
 const DisplayCellStyle = styled.div`
   span {
@@ -87,6 +88,56 @@ const SimpleHandsOnTable = ({
       ...options,
       ...customOptions,
     });
+
+    let highlights = tableInfo.highlights;
+
+    let mouseX, mouseY, showTooltip = false;
+
+    // cell에 mouse를 over하는 경우 tooltip calssName를 추가
+    myTable.addHook("afterOnCellMouseOver", (event, coords, td) => {
+      let highlightCell = highlights.find((item) => item.row === coords.row && item.col === coords.col);
+      if(highlightCell === undefined) return;
+
+      let tooltip = document.createElement("div");
+      if (tooltip) tooltip.remove(); // 이전 tooltip이 지워지지 않았다면 삭제
+      
+      tooltip.textContent = highlightCell.loginID;
+      tooltip.classList.add(`${styles.tooltip}`);
+
+      document.body.appendChild(tooltip); //<div> tooltip 추가
+
+      // tooltip이 나오는 위치 조절
+      let cellOffset = td.getBoundingClientRect();
+      mouseX = cellOffset.left + window.scrollX + cellOffset.width / 2 + 10;
+      mouseY = cellOffset.top + window.scrollY - 30;
+
+      showTooltip = true;
+    });
+
+    // mouse가 cell을 벗어나면 tooltip calssName 삭제
+    myTable.addHook("afterOnCellMouseOut", (event, coords, TD) => {
+      let tooltip = document.querySelector(`.${styles.tooltip}`);
+      if (tooltip)  tooltip.remove();
+      showTooltip = false;
+    });
+
+    document.addEventListener("mouseover", (event) => {
+      let targetElement = event.target;
+      let check = targetElement.classList.contains(`${styles.custom}`);
+      let tooltip = document.querySelector(`.${styles.tooltip}`);      
+      
+      if (check && tooltip) {
+        tooltip.style.top = mouseY + 10 + "px";
+        tooltip.style.left = mouseX + 10 + "px";
+        tooltip.style.display = showTooltip ? "block" : "none";
+      }
+    });
+
+    for(let cell of highlights) {
+      let {row, col, borderColor} = cell;
+      let currentClassName = myTable.getCellMeta(row, col).className;
+      myTable.setCellMeta(row, col, "className", `${currentClassName} show_tooltip ${styles.custom} ${styles[`box_${borderColor}`]}`);
+    }
 
     myTable.render();
     if (setTable) setTable(myTable);

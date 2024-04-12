@@ -155,11 +155,24 @@ const moveColumnTable = (table, movedColumns, finalIndex) => {
 const SocketTable = () => {
   const location = useLocation();
   const [loginID, setLoginID] = useState("");
-
   const [tableInfo, setTableInfo] = useState({
     data: defaultData,
     rowHeights: 25,
     colWidths: 60,
+    highlights: [
+      {
+        row: 1,
+        col: 1,
+        loginID: "Lilly",
+        borderColor: "red",
+      },
+      {
+        row: 5,
+        col: 3,
+        loginID: "Joe",
+        borderColor: "blue",
+      },
+    ],
   });
 
   const customOptions = {
