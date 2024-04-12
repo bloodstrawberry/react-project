@@ -143,12 +143,7 @@ const moveRowTable = (table, movedRows, finalIndex) => {
 
 const moveColumnTable = (table, movedColumns, finalIndex) => {
   let transposedTable = transpose(table);
-  console.log({ table });
-  console.log(movedColumns, finalIndex);
-  console.log({ transposedTable });
   let movedTable = moveRowTable(transposedTable, movedColumns, finalIndex);
-  console.log({ movedTable });
-  console.log(transpose(movedTable));
   return transpose(movedTable);
 };
 
@@ -159,26 +154,19 @@ const SocketTable = () => {
     data: defaultData,
     rowHeights: 25,
     colWidths: 60,
-    highlights: [
-      {
-        row: 1,
-        col: 1,
-        loginID: "Lilly",
-        borderColor: "red",
-      },
-      {
-        row: 5,
-        col: 3,
-        loginID: "Joe",
-        borderColor: "blue",
-      },
-    ],
+    highlights: [],
   });
 
   const customOptions = {
     afterChange: function (changes, source) {
       // changes : 변경된 데이터 정보, source : 변경을 발생시킨 원인
       if (source === "loadData") return;
+
+      if(source === "edit") {
+        let [row, col] = changes[0];
+        console.log(row, col);
+        socketIO.emit("sendHighlight", location.state.loginID, row, col);        
+      }
 
       console.log("Changed Data :", source, changes);
       socketIO.emit("changeData", changes);
@@ -247,6 +235,10 @@ const SocketTable = () => {
       let colWidths = getColWidths(this);
       socketIO.emit("resizeCol", colWidths);
     },
+    // afterSelection: function(sr, sc, er, ec) {
+    //   console.log(`Selected cells: ${sr},${sc} to ${er},${ec}`);  
+    //   socketIO.emit("sendHighlight", location.state.loginID, sr, sc);
+    // },
   };
 
   const init = () => {
@@ -376,6 +368,19 @@ const SocketTable = () => {
     });
   };
 
+  const resHighlight = (highlightsInfo) => {
+    let highlights = highlightsInfo.filter((item) => item.clientId !== socketIO.id);
+    
+    console.log(highlights);    
+
+    setTableInfo((prev) => {
+      return {
+        ...prev,
+        highlights,
+      };
+    });
+  }
+
   useEffect(() => {
     socketIO.connect();
     if (!socketIO) return;
@@ -390,6 +395,7 @@ const SocketTable = () => {
     socketIO.on("resMoveCol", resMoveCol);
     socketIO.on("resResizeRow", resResizeRow);
     socketIO.on("resResizeCol", resResizeCol);
+    socketIO.on("resHighlight", resHighlight);      
 
     return () => {
       // socketIO.off("respondData", respondDataCallback);
@@ -402,6 +408,7 @@ const SocketTable = () => {
       socketIO.off("resMoveCol", resMoveCol);
       socketIO.off("resResizeRow", resResizeRow);
       socketIO.off("resResizeCol", resResizeCol);
+      socketIO.off("resHighlight", resHighlight);      
     };
   }, []);
 
@@ -413,6 +420,7 @@ const SocketTable = () => {
           data: data.currentData,
           rowHeights: data.currentRowHeights,
           colWidths: data.currentColWidths,
+          highlights: [],
         });
       } else {
         let basicRowHeight = 25;

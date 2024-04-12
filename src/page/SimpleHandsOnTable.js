@@ -122,7 +122,7 @@ const SimpleHandsOnTable = ({
 
     document.addEventListener("mouseover", (event) => {
       let targetElement = event.target;
-      let check = targetElement.classList.contains(`${styles.custom}`);
+      let check = targetElement.classList.contains(`${styles.other}`);
       let tooltip = document.querySelector(`.${styles.tooltip}`);      
       
       if (check && tooltip) {
@@ -139,7 +139,7 @@ const SimpleHandsOnTable = ({
         row,
         col,
         "className",
-        `${currentClassName} ${styles.custom} ${styles[`box_${borderColor}`]
+        `${currentClassName} ${styles.other} ${styles[`box_${borderColor}`]
         }`
       );
     }

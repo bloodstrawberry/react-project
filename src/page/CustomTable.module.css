@@ -7,11 +7,7 @@
     border-radius: 3px;
 }
 
-.custom {
-    z-index: 1000;
-    position: relative;
-    top: top;
-    left: left;
+.other {    
     background-color: transparent;
     pointer-events: "none";
 }
@@ -32,6 +28,6 @@
     box-shadow: inset 0 0 0 2px orange;
 }
 
-.box_orange {
+.box_purple {
     box-shadow: inset 0 0 0 2px purple;
 }
