@@ -25,16 +25,16 @@ function App() {
   return (
     <div className="App">
       <div className="router">
-      <span>
-          <Link to="/table-login">Table</Link>
-        </span>     
         {/* <span>
+          <Link to="/table-login">Table</Link>
+        </span>      */}
+        <span>
           <Link to="/myHandsTable">HandsOnTable</Link>
-        </span>  */}
+        </span> 
         {/* <span>
           <Link to="/ck-editor">CK Editor</Link>
         </span> */}
-        {/* <span>
+        <span>
           <Link to="/tui-editor">Toast UI</Link>
         </span>        
         <span>
@@ -54,7 +54,7 @@ function App() {
         </span>
         <span>
           <Link to="/chat-login">Chat Room</Link>
-        </span>         */}
+        </span>        
       </div>
       <div>
         <Routes>

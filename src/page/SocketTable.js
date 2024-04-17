@@ -239,6 +239,10 @@ const SocketTable = () => {
     //   console.log(`Selected cells: ${sr},${sc} to ${er},${ec}`);  
     //   socketIO.emit("sendHighlight", location.state.loginID, sr, sc);
     // },
+    afterSetCellMeta: function(row, column, key, value) {
+       console.log(row, column, key, value);  
+       //console.log(this.getCellMetaAtRow(row));
+    }
   };
 
   const init = () => {
