@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
 
-// import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
+import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 
 import {
   MainContainer,

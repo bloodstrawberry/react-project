@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-//import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
+import styles from "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 
 import { io } from "socket.io-client";
 
@@ -240,7 +240,7 @@ const SocketTable = () => {
     //   socketIO.emit("sendHighlight", location.state.loginID, sr, sc);
     // },
     afterSetCellMeta: function(row, column, key, value) {
-       //console.log(row, column, key, value);  
+       console.log(row, column, key, value);  
        //console.log(this.getCellMetaAtRow(row));
     }
   };
@@ -315,7 +315,6 @@ const SocketTable = () => {
       for (let change of changes) {
         let [row, col, before, after] = change;
         newTable[row][col] = after;
-        console.log(before);
       }
 
       return {

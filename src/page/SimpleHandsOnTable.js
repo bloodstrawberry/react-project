@@ -29,7 +29,6 @@ const SimpleHandsOnTable = ({
   const cellSelected = () => {
     let selectedLast = myTable.getSelectedLast();
 
-    console.log(selectedCell);
     if (selectedLast[0] < 0 || selectedLast[1] < 0) return;
 
     let value = myTable.getValue() || "";
