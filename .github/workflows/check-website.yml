@@ -3,7 +3,7 @@ name: Test site for publicly known js vulnerabilities
 on:
   push:
     branches:
-      - master # 배포된 리액트 앱이 있는 브랜치에 따라 수정하십시오.
+      - master # 배포된 리액트 앱이 있는 브랜치에 따라 수정
 
 jobs:
   security:
@@ -15,10 +15,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '16.19.0'
 
       - name: Install dependencies
-        run: npm install # 리액트 앱에 필요한 종속성을 설치합니다.
+        run: npm install --legacy-peer-deps # 리액트 앱에 필요한 종속성을 설치합니다.
 
       - name: Build React app
         run: npm run build # 리액트 앱을 빌드합니다.
