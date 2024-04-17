@@ -3,7 +3,7 @@ name: Test site for publicly known js vulnerabilities
 on:
   push:
     branches:
-      - main # 배포된 리액트 앱이 있는 브랜치에 따라 수정
+      - master # 배포된 리액트 앱이 있는 브랜치에 따라 수정
 
 jobs:
   security:
