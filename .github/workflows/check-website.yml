@@ -1,10 +1,10 @@
 name: Test site for publicly known js vulnerabilities
 
-on: 
-  workflow_run:
-    workflows: [deploy]
-    types:
-      - completed
+on:
+  push:
+    branches:
+      - gh-pages 
+      
 jobs:
   security:
     runs-on: ubuntu-latest
