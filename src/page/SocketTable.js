@@ -240,7 +240,7 @@ const SocketTable = () => {
     //   socketIO.emit("sendHighlight", location.state.loginID, sr, sc);
     // },
     afterSetCellMeta: function(row, column, key, value) {
-       console.log(row, column, key, value);  
+       //console.log(row, column, key, value);  
        //console.log(this.getCellMetaAtRow(row));
     }
   };
