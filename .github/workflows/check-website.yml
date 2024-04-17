@@ -32,7 +32,7 @@ jobs:
 
       # npm run deploy 후에 추가
       - name: Deploy to GitHub Pages
-        run: npm run deploy # 리액트 앱을 깃허브 페이지로 배포합니다.
+        run: npm run deploy & gh-pages -d build # 리액트 앱을 깃허브 페이지로 배포합니다.
 
       # npm run deploy 이후에 실행되도록 if 문을 사용하여 추가
       - name: Test for public JavaScript library vulnerabilities
