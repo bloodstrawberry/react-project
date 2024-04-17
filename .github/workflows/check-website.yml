@@ -35,12 +35,7 @@ jobs:
 #        run: npm run deploy & gh-pages -d build # 리액트 앱을 깃허브 페이지로 배포합니다.
 
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages  # 배포할 브랜치로 설정하세요
-          folder: ""  # 빌드된 파일이 있는 폴더로 설정하세요
-
+        uses: omkartapale/react-deployment-gh-pages@v1.0.0
 
       # npm run deploy 이후에 실행되도록 if 문을 사용하여 추가
       - name: Test for public JavaScript library vulnerabilities
