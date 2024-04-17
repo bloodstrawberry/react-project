@@ -24,11 +24,11 @@ jobs:
           git config --global credential.helper store
           git config --list
 
-      # - name: Install dependencies
-      #   run: npm install --legacy-peer-deps # 리액트 앱에 필요한 종속성을 설치합니다.
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps # 리액트 앱에 필요한 종속성을 설치합니다.
 
-      # - name: Build React app
-      #   run: npm run build # 리액트 앱을 빌드합니다.
+      - name: Build React app
+        run: npm run build # 리액트 앱을 빌드합니다.
 
       # npm run deploy 후에 추가
 #      - name: Deploy to GitHub Pages
