@@ -9,7 +9,9 @@ jobs:
   security:
     runs-on: ubuntu-latest
 
-    permissions: write-all
+    # permissions: write-all
+    permissions: 
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -20,12 +22,12 @@ jobs:
         with:
           node-version: '16.19.0'
 
-      - name: Configure Git
-        run: |
-          git config --global user.email "vvv3334@hanmail.net"
-          git config --global user.name "bloodstrawberry"
-          git config --global credential.helper store
-          git config --list
+      # - name: Configure Git
+      #   run: |
+      #     git config --global user.email "vvv3334@hanmail.net"
+      #     git config --global user.name "bloodstrawberry"
+      #     git config --global credential.helper store
+      #     git config --list
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps # 리액트 앱에 필요한 종속성을 설치합니다.
