@@ -1,45 +1,18 @@
-name: Test site for publicly known js vulnerabilities
+name: React app deployment
 
 on:
   push:
-    branches:
-      - master # 배포된 리액트 앱이 있는 브랜치에 따라 수정
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
-  security:
+  build:
+
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16.19.0'
-
-      - name: Configure Git
-        run: |
-          git config --global user.email "vvv3334@hanmail.net"
-          git config --global user.name "bloodstrawberry"
-          git config --global credential.helper store
-          git config --list
-
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps # 리액트 앱에 필요한 종속성을 설치합니다.
-
-      - name: Build React app
-        run: npm run build # 리액트 앱을 빌드합니다.
-
-      # npm run deploy 후에 추가
-#      - name: Deploy to GitHub Pages
-#        run: npm run deploy & gh-pages -d build # 리액트 앱을 깃허브 페이지로 배포합니다.
-
-      - name: Deploy to GitHub Pages
-        uses: omkartapale/react-deployment-gh-pages@v1.0.0
-
-      # npm run deploy 이후에 실행되도록 if 문을 사용하여 추가
-      - name: Test for public JavaScript library vulnerabilities
-        if: success() # npm run deploy가 성공적으로 완료되었을 때만 실행됩니다.
-        uses: lirantal/is-website-vulnerable@main
-        with:
-          scan-url: "https://www.aladin.co.kr/home/welcome.aspx" # 배포된 웹사이트의 URL로 변경해야 합니다.
+    - name: Deploy react app to github pages
+      uses: tanwanimohit/deploy-react-to-ghpages@v1.0.2
