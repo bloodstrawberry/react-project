@@ -39,7 +39,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages  # 배포할 브랜치로 설정하세요
-          folder: static  # 빌드된 파일이 있는 폴더로 설정하세요
+          folder: ""  # 빌드된 파일이 있는 폴더로 설정하세요
 
 
       # npm run deploy 이후에 실행되도록 if 문을 사용하여 추가
