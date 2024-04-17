@@ -28,12 +28,12 @@ jobs:
       - name: Build React app
         run: npm run build # 리액트 앱을 빌드합니다.
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages 
-          folder: build 
+      # - name: Deploy to GitHub Pages
+      #   uses: JamesIves/github-pages-deploy-action@4.1.3
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     branch: gh-pages 
+      #     folder: build 
 
       - name: Test for public JavaScript library vulnerabilities
         if: success() # npm run deploy가 성공적으로 완료되었을 때만 실행됩니다.
