@@ -44,7 +44,7 @@ function App() {
           <Link to="/tabs">Tabs</Link>
         </span>
         <span>
-          <Link to="/floating">Floatings</Link>
+          <Link to="/floating">Floating</Link>
         </span>
         <span>
           <Link to="/encrypt">Encrypt</Link>
