@@ -21,6 +21,8 @@ jobs:
         run: |
           git config --global user.email "vvv3334@hanmail.net"
           git config --global user.name "bloodstrawberry"
+          git config --global credential.helper store
+          ssh-keygen -t rsa -b 4096 -C "vvv3334@hanmail.net"
           git config --list
 
       - name: Install dependencies
