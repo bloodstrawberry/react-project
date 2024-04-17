@@ -1,6 +1,6 @@
 import { Octokit } from "@octokit/rest";
 
-const myKey = ""; // process.env.REACT_APP_MY_TOKEN.replaceAll("X", "");
+const myKey = process.env.REACT_APP_MY_TOKEN.replaceAll("X", "");
 const repo = `auto-test`;
 
 export const fileRead = async (path) => {
