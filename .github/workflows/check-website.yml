@@ -17,6 +17,11 @@ jobs:
         with:
           node-version: '16.19.0'
 
+      - name: Configure Git
+        run: |
+          git config --global user.email "vvv3334@hanmail.net"
+          git config --global user.name "bloodstrawberry"
+
       - name: Install dependencies
         run: npm install --legacy-peer-deps # 리액트 앱에 필요한 종속성을 설치합니다.
 
