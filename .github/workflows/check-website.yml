@@ -6,7 +6,7 @@ on:
       - master # 배포된 리액트 앱이 있는 브랜치에 따라 수정
 
 jobs:
-  security:
+  push-and-deploy:
     runs-on: ubuntu-latest
 
     # permissions: write-all
