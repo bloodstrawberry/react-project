@@ -31,8 +31,8 @@ jobs:
         run: npm run build # 리액트 앱을 빌드합니다.
 
       # npm run deploy 후에 추가
-#      - name: Deploy to GitHub Pages
-#        run: npm run deploy & gh-pages -d build # 리액트 앱을 깃허브 페이지로 배포합니다.
+      # - name: Deploy to GitHub Pages
+      #   run: npm run deploy & gh-pages -d build # 리액트 앱을 깃허브 페이지로 배포합니다.
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.3
