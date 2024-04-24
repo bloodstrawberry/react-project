@@ -24,7 +24,7 @@ const SimpleHandsOnTable = ({
   customOptions,
 }) => {
   const [displayCellInfo, setDisplaySetInfo] = useState("");
-  const [selectedCell, setSelectedCell] = useState([0, 0]);
+  const [, setSelectedCell] = useState([0, 0]);
 
   const cellSelected = () => {
     let selectedLast = myTable.getSelectedLast();

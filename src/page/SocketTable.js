@@ -247,6 +247,7 @@ const SocketTable = () => {
 
   const init = () => {
     setLoginID(location.state.loginID);
+    console.log(styles);
   };
 
   useEffect(init, []);
@@ -314,6 +315,7 @@ const SocketTable = () => {
       let newTable = [...prev.data];
       for (let change of changes) {
         let [row, col, before, after] = change;
+        console.log(before);
         newTable[row][col] = after;
       }
 
