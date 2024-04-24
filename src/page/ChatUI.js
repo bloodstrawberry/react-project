@@ -146,7 +146,6 @@ const ChatUI = () => {
   };
 
   const init = () => {
-    console.log(styles);
     socketIO.connect();
     
     setLoginID(location.state.loginID);
