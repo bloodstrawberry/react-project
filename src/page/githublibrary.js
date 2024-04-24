@@ -1,6 +1,9 @@
 import { Octokit } from "@octokit/rest";
 
 const getToken = () => {
+  console.log(process.env.REACT_APP_TEST);
+  console.log(process.env.HELLO_TEST);
+  console.log(process.env);  
   if(process.env.REACT_APP_MY_TOKEN) return process.env.REACT_APP_MY_TOKEN.replaceAll("X", "");
   return "";
 }
